@@ -23,6 +23,7 @@ html, body{
 	height: 90%;
 	position: relative;
 	overflow: hidden;
+	box-sizing: content-box;
 	border-bottom: 3px solid #022889;	
 }
 
@@ -51,7 +52,7 @@ html, body{
 // 获取相关的元素
 var con = document.querySelector(".container");
 var box = document.querySelector(".box");
-console.log(con);
+
 
 // 运行中用到的参数
 var para = {
@@ -61,8 +62,31 @@ var para = {
 	'boxX' : 0,
 	'boxY' : 0,
 	'diffX' : 0,
-	'diffY' : 0
+	'diffY' : 0,
+	'timer' : null
 };
+
+
+function limitPos(con, box){
+	var boxL = box.offsetLeft;
+	var boxT = box.offsetTop;
+	var conW = con.offsetWidth;
+	var conH = con.offsetHeight;
+	var boxW = box.offsetWidth;
+	var boxH = box.offsetHeight;
+	if (boxL <= 0) {
+		box.style.left = '0px';
+	}else if(boxL >= conW-boxW){
+		box.style.left = conW-boxW + 'px';
+	}
+	if (boxT <= 0) {
+		box.style.top = '0px';
+	}else if(boxT >= conH-boxH){
+		box.style.top = conH-boxH-3 + 'px';
+	}
+}
+
+
 
 
 
@@ -82,12 +106,16 @@ document.addEventListener('touchmove', function(e){
 	if (para.moveOff) {
 		box.style.left = e.changedTouches[0].clientX - para.diffX + 'px';
 		box.style.top = e.changedTouches[0].clientY - para.diffY + 'px';
+		limitPos(con, box);
 	}
 });
 
 
-box.addEventListener('touchend', function(e){
-	para.moveOff = false;
+document.addEventListener('touchend', function(e){
+	if (para.moveOff) {
+		para.moveOff = false;
+	}
+	
 })
 
 
@@ -105,21 +133,24 @@ box.onmousedown = function(e){
 
 
 // 拖动事件
-document.onmousemove = document.ontouchmove = function(e){
+document.onmousemove = function(e){
 	var e = e || event;
 	if (para.moveOff) {
 		box.style.left = e.clientX - para.diffX + 'px';
 		box.style.top = e.clientY - para.diffY + 'px';
-		
+		limitPos(con, box);
 	}
 	
 }
 
 
 // 抬起鼠标事件
-box.onmouseup = box.ontouchend = function(e){
+document.onmouseup = function(e){
 	var e = e || event;
-	para.moveOff = false;
+	if (para.moveOff) {
+		para.moveOff = false;
+	}
+	
 }
 
 
