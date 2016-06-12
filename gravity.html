@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>受到重力感召的小球</title>
+<style>
+*{
+	margin: 0px;
+	padding: 0px;
+}
+
+html, body{
+	width:100%;
+	min-width: 320px;
+	min-height: 480px;
+	height: 100%;
+}
+
+.container{
+	width: 100%;
+	height: 90%;
+	position: relative;
+	overflow: hidden;
+	border-bottom: 3px solid #022889;	
+}
+
+.box{
+	width: 80px;
+	height: 80px;
+	cursor: move;
+	position: absolute;
+	left: 100px;
+	top: 100px;
+	background:#C22BE6;
+	border-radius: 100%;
+}
+
+</style>
+</head>
+<body>
+
+
+	<div class="container">
+		<div class="box"></div>
+	</div>
+
+
+<script>
+// 获取相关的元素
+var con = document.querySelector(".container");
+var box = document.querySelector(".box");
+console.log(con);
+
+// 运行中用到的参数
+var para = {
+	'moveOff' : false,
+	'offsetX' : 0,
+	'offsetY' : 0,
+	'boxX' : 0,
+	'boxY' : 0,
+	'diffX' : 0,
+	'diffY' : 0
+};
+
+
+
+// 移动端事件
+if( /Android|ucweb|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+
+
+box.addEventListener('touchstart', function(e){
+	para.diffX = e.changedTouches[0].clientX - box.offsetLeft;
+	para.diffY = e.changedTouches[0].clientY - box.offsetTop;
+	para.moveOff = true;
+
+})
+
+
+document.addEventListener('touchmove', function(e){
+	if (para.moveOff) {
+		box.style.left = e.changedTouches[0].clientX - para.diffX + 'px';
+		box.style.top = e.changedTouches[0].clientY - para.diffY + 'px';
+	}
+});
+
+
+box.addEventListener('touchend', function(e){
+	para.moveOff = false;
+})
+
+
+// PC端事件
+}else{
+
+
+// 注册按下事件
+box.onmousedown = function(e){
+	var e = e || event;
+	para.diffX = e.offsetX;
+	para.diffY = e.offsetY;
+	para.moveOff = true;	
+}
+
+
+// 拖动事件
+document.onmousemove = document.ontouchmove = function(e){
+	var e = e || event;
+	if (para.moveOff) {
+		box.style.left = e.clientX - para.diffX + 'px';
+		box.style.top = e.clientY - para.diffY + 'px';
+		
+	}
+	
+}
+
+
+// 抬起鼠标事件
+box.onmouseup = box.ontouchend = function(e){
+	var e = e || event;
+	para.moveOff = false;
+}
+
+
+}
+
+</script>
+</body>
+</html>
