@@ -63,7 +63,16 @@ var para = {
 	'boxY' : 0,
 	'diffX' : 0,
 	'diffY' : 0,
-	'timer' : null
+	'timer' : null,
+	'speedX' : 0,
+	'speedY' : 0,
+	'gravityOff' : true,
+	'gravityNum' : 3,
+	'finction' : 3,
+	'finctionOff' : false,
+	'finctionTimer' : null,
+	'timeFrag' : 30
+
 };
 
 
@@ -86,6 +95,32 @@ function limitPos(con, box){
 	}
 }
 
+
+function go(box){
+	clearInterval(para.timer);
+	para.timer = setInterval(function(){
+		if (box.offsetLeft <= 0 || box.offsetLeft >= con.offsetWidth-box.offsetWidth) {
+			para.speedX = para.speedX > 0 ? (para.speedX-para.finction)*(-1) : (para.speedX+para.finction)*(-1);
+		}
+		
+		if (box.offsetTop <= 1 || box.offsetTop >= con.offsetHeight-box.offsetHeight-3) {
+			para.speedY = para.speedY*(-1);
+		}
+		box.style.left = box.offsetLeft + para.speedX + 'px';
+		box.style.top = box.offsetTop + para.speedY + 5 + 'px';
+		limitPos(con, box);
+		if (Math.abs(para.speedY) <= para.gravityNum && box.offsetTop >= con.offsetHeight-box.offsetHeight-3) {
+			para.speedY = 0;
+			para.gravityOff = false;
+			para.finctionOff = true;
+		}
+
+		if (para.gravityOff) {
+			para.speedY += para.gravityNum;
+		}
+		console.log(para.speedY);
+	}, para.timeFrag);
+}
 
 
 
@@ -113,10 +148,14 @@ document.addEventListener('touchmove', function(e){
 
 document.addEventListener('touchend', function(e){
 	if (para.moveOff) {
+		para.gravityOff = true;
 		para.moveOff = false;
+		para.speedX = 15;
+		para.speedY = 15;
+		go(box);
 	}
 	
-})
+});
 
 
 // PC端事件
@@ -129,7 +168,7 @@ box.onmousedown = function(e){
 	para.diffX = e.offsetX;
 	para.diffY = e.offsetY;
 	para.moveOff = true;	
-}
+};
 
 
 // 拖动事件
@@ -141,20 +180,29 @@ document.onmousemove = function(e){
 		limitPos(con, box);
 	}
 	
-}
+};
 
 
 // 抬起鼠标事件
 document.onmouseup = function(e){
 	var e = e || event;
 	if (para.moveOff) {
+		para.gravityOff = true;
 		para.moveOff = false;
+		para.speedX = 15;
+		para.speedY = 15;
+		go(box);
 	}
 	
-}
+};
 
 
-}
+
+
+
+
+
+};
 
 </script>
 </body>
