@@ -71,7 +71,8 @@ var para = {
 	'finction' : 3,
 	'finctionOff' : false,
 	'finctionTimer' : null,
-	'timeFrag' : 30
+	'timeFrag' : 30,
+	'posArr' : []
 
 };
 
@@ -118,7 +119,9 @@ function go(box){
 		if (para.gravityOff) {
 			para.speedY += para.gravityNum;
 		}
-		console.log(para.speedY);
+		if (para.speedY == 0 && para.speedX == 0) {
+			clearInterval(para.timer);
+		}
 	}, para.timeFrag);
 }
 
@@ -130,6 +133,7 @@ if( /Android|ucweb|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
 
 
 box.addEventListener('touchstart', function(e){
+	clearInterval(para.timer);
 	para.diffX = e.changedTouches[0].clientX - box.offsetLeft;
 	para.diffY = e.changedTouches[0].clientY - box.offsetTop;
 	para.moveOff = true;
@@ -142,6 +146,13 @@ document.addEventListener('touchmove', function(e){
 		box.style.left = e.changedTouches[0].clientX - para.diffX + 'px';
 		box.style.top = e.changedTouches[0].clientY - para.diffY + 'px';
 		limitPos(con, box);
+		var oDate = new Date();
+		var cellTime = oDate.getTime();
+		var newPos = [e.changedTouches[0].clientX, e.changedTouches[0].clientY, cellTime];
+		para.posArr.push(newPos);
+		if (para.posArr.length >= 4) {
+			para.posArr.shift();
+		}
 	}
 });
 
@@ -150,8 +161,9 @@ document.addEventListener('touchend', function(e){
 	if (para.moveOff) {
 		para.gravityOff = true;
 		para.moveOff = false;
-		para.speedX = 15;
-		para.speedY = 15;
+		para.speedX = (para.posArr[2][0]-para.posArr[0][0])/(para.posArr[2][2]-para.posArr[0][2])*10;
+		para.speedY = (para.posArr[2][1]-para.posArr[0][1])/(para.posArr[2][2]-para.posArr[0][2])*10;
+		console.log(para.speedY)
 		go(box);
 	}
 	
@@ -165,9 +177,11 @@ document.addEventListener('touchend', function(e){
 // 注册按下事件
 box.onmousedown = function(e){
 	var e = e || event;
+	clearInterval(para.timer);
 	para.diffX = e.offsetX;
 	para.diffY = e.offsetY;
-	para.moveOff = true;	
+	para.moveOff = true;
+	para.posArr = [];	
 };
 
 
@@ -178,6 +192,14 @@ document.onmousemove = function(e){
 		box.style.left = e.clientX - para.diffX + 'px';
 		box.style.top = e.clientY - para.diffY + 'px';
 		limitPos(con, box);
+		var oDate = new Date();
+		var cellTime = oDate.getTime();
+		var newPos = [e.clientX, e.clientY, cellTime];
+		para.posArr.push(newPos);
+		if (para.posArr.length >= 4) {
+			para.posArr.shift();
+		}
+		
 	}
 	
 };
@@ -188,9 +210,10 @@ document.onmouseup = function(e){
 	var e = e || event;
 	if (para.moveOff) {
 		para.gravityOff = true;
-		para.moveOff = false;
-		para.speedX = 15;
-		para.speedY = 15;
+		para.moveOff = false;				
+		para.speedX = (para.posArr[2][0]-para.posArr[0][0])/(para.posArr[2][2]-para.posArr[0][2])*10;
+		para.speedY = (para.posArr[2][1]-para.posArr[0][1])/(para.posArr[2][2]-para.posArr[0][2])*10;
+		console.log(para.speedY)
 		go(box);
 	}
 	
