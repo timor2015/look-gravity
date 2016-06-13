@@ -114,8 +114,6 @@ function go(box){
 			para.speedY = 0;
 			para.gravityOff = false;
 			para.finctionOff = true;
-			console.log(para.speedY)
-			console.log(para.speedX)
 		}
 
 		if (Math.abs(para.speedX) <= 2) {
@@ -124,7 +122,6 @@ function go(box){
 
 		if (para.gravityOff) {
 			para.speedY += para.gravityNum;
-			console.log(para.speedY)
 		}
 		if (para.speedY == 0 && para.speedX == 0 && para.gravityOff==false) {
 			clearInterval(para.timer);
@@ -173,7 +170,6 @@ document.addEventListener('touchend', function(e){
 		para.moveOff = false;
 		para.speedX = parseInt((para.posArr[2][0]-para.posArr[0][0])/(para.posArr[2][2]-para.posArr[0][2])*10);
 		para.speedY = parseInt((para.posArr[2][1]-para.posArr[0][1])/(para.posArr[2][2]-para.posArr[0][2])*10);
-		console.log(para.speedY)
 		go(box);
 	}
 	
@@ -223,7 +219,6 @@ document.onmouseup = function(e){
 		para.moveOff = false;				
 		para.speedX = parseInt((para.posArr[2][0]-para.posArr[0][0])/(para.posArr[2][2]-para.posArr[0][2])*10);
 		para.speedY = parseInt((para.posArr[2][1]-para.posArr[0][1])/(para.posArr[2][2]-para.posArr[0][2])*10);
-		console.log(para.speedY)
 		go(box);
 	}
 	
