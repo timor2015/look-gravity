@@ -126,7 +126,7 @@ function go(box){
 			para.speedY += para.gravityNum;
 			console.log(para.speedY)
 		}
-		if (para.speedY == 0 && para.speedX == 0) {
+		if (para.speedY == 0 && para.speedX == 0 && para.gravityOff==false) {
 			clearInterval(para.timer);
 		}
 	}, para.timeFrag);
