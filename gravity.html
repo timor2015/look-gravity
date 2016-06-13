@@ -138,6 +138,9 @@ function go(box){
 // 移动端事件
 if( /Android|ucweb|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
 
+document.querySelector('body').addEventListener('touchstart', function (ev) {
+    ev.preventDefault();
+});
 
 box.addEventListener('touchstart', function(e){
 	clearInterval(para.timer);
